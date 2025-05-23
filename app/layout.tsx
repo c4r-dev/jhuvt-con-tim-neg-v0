@@ -1,22 +1,54 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+// app/layout.tsx
+'use client'; // Keep this
 
-const inter = Inter({ subsets: ['latin'] })
+import Image from 'next/image';
+import "./globals.css"; // Import global styles
 
-export const metadata: Metadata = {
-  title: 'JHUVT Con Tim Neg',
-  description: 'Next.js application for JHUVT Con Tim Neg',
-}
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+
+  const handleResetClick = () => {
+    window.location.reload();
+  };
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+
+      <head>
+        <title>Time and Negative Controls</title>
+        <meta name="description" content="Time and Negative Controls" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
+
+      <body>
+        <header className="header"> {/* Header class from globals.css */}
+          <button
+            className="favicon-button" // Favicon button class
+            onClick={handleResetClick}
+            title="Reset Application"
+          >
+            <Image
+              src="/favicon.ico"
+              alt="Logo - Reset"
+              width={40}
+              height={40}
+              className="favicon" // Favicon class
+              priority
+            />
+          </button>
+          <div className="title-container"> {/* Title container class */}
+            <h1 className="title">Time and Negative Controls</h1> {/* Title class */}
+          </div>
+        </header>
+
+        <main>{children}</main>
+        
+      </body>
+
     </html>
-  )
+  );
 }

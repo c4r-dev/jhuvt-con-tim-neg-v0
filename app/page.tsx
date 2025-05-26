@@ -468,7 +468,7 @@ export default function Home() {
                 The <strong>Difference in Nominal Significance (DINS)</strong> error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
               </p>
               <p className="mb-3">
-                This error is problematic because the absence of statistical significance in one group does not necessarily mean that group differs from a group that does show significance. To properly compare treatments, researchers should directly compare the two groups rather than comparing each group's significance status.
+                This error is problematic because the absence of statistical significance in one group does not necessarily mean that group differs from a group that does show significance. To properly compare treatments, researchers should directly compare the two groups rather than comparing each group&apos;s significance status.
               </p>
               <p>
                 In your analysis, both conditions showed non-significant results (Control: p = 0.34230, Treatment A: p = 0.87741), but it would still be incorrect to conclude they are equivalent without proper comparative statistical testing.

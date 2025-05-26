@@ -20,7 +20,7 @@ export default function RootLayout({
 
       <head>
         <title>Time and Negative Controls</title>
-        <meta name="description" content="Time and Negative Controls" />
+        <meta name="description" content="Difference in Nominal Significance error (DINS)" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
 
@@ -41,7 +41,7 @@ export default function RootLayout({
             />
           </button>
           <div className="title-container"> {/* Title container class */}
-            <h1 className="title">Time and Negative Controls</h1> {/* Title class */}
+            <h1 className="title">Difference in Nominal Significance error (DINS)</h1> {/* Title class */}
           </div>
         </header>
 

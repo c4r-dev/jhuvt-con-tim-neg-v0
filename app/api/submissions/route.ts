@@ -23,6 +23,13 @@ const Submission = mongoose.models.dinstimneg || mongoose.model('dinstimneg', su
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+    
     await dbConnect();
     
     const { tableAnalysis, graphAnalysis } = await request.json();
@@ -53,6 +60,13 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json(
+        { error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+    
     await dbConnect();
     
     // Get the last 30 submissions, sorted by timestamp descending

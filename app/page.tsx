@@ -28,6 +28,8 @@ export default function Home() {
   const [submitClicked, setSubmitClicked] = useState(false);
   const [showResultsPage, setShowResultsPage] = useState(false);
   const [activeTab, setActiveTab] = useState<'table' | 'graph'>('table');
+  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const newBaseButtonStyle: React.CSSProperties = {
     padding: '10px 15px',
@@ -47,22 +49,45 @@ export default function Home() {
     return Math.sqrt(variance);
   };
 
-  // Two-sample t-test for p-value calculation
-  const calculateTTest = (group1: number[], group2: number[]): number => {
-    const mean1 = calculateMean(group1);
-    const mean2 = calculateMean(group2);
-    const std1 = calculateStandardDeviation(group1, mean1);
-    const std2 = calculateStandardDeviation(group2, mean2);
-    const n1 = group1.length;
-    const n2 = group2.length;
-
-    const pooledStd = Math.sqrt(((n1 - 1) * std1 * std1 + (n2 - 1) * std2 * std2) / (n1 + n2 - 2));
-    const tStat = (mean1 - mean2) / (pooledStd * Math.sqrt(1/n1 + 1/n2));
-    const df = n1 + n2 - 2;
-
-    // Approximate p-value calculation (simplified)
-    const pValue = 2 * (1 - Math.abs(tStat) / Math.sqrt(df + Math.pow(tStat, 2)));
-    return Math.max(0, Math.min(1, pValue));
+  // Function to save submission to MongoDB
+  const saveSubmission = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tableAnalysis: userThoughts,
+          graphAnalysis: graphThoughts
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save submission');
+      }
+      
+      // Fetch updated submissions after saving
+      await fetchSubmissions();
+    } catch (error) {
+      console.error('Error saving submission:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Function to fetch last 30 submissions
+  const fetchSubmissions = async () => {
+    try {
+      const response = await fetch('/api/submissions');
+      if (response.ok) {
+        const data = await response.json();
+        setSubmissions(data.submissions || []);
+      }
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+    }
   };
 
   const calculateStatistics = () => {
@@ -97,6 +122,32 @@ export default function Home() {
     setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 100);
+  };
+  
+  // Load submissions when results page is shown
+  useEffect(() => {
+    if (showResultsPage && submissions.length === 0) {
+      fetchSubmissions();
+    }
+  }, [showResultsPage]);
+  
+  // Function to restart the application
+  const restartApplication = () => {
+    setShowResults(false);
+    setStatistics({});
+    setUserThoughts('');
+    setShowGraphBox(false);
+    setGraphThoughts('');
+    setShowResultsClicked(false);
+    setContinueClicked(false);
+    setSubmitClicked(false);
+    setShowResultsPage(false);
+    setActiveTab('table');
+    setSubmissions([]);
+    setLoading(false);
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   return (
@@ -440,10 +491,14 @@ export default function Home() {
                   cursor: (graphThoughts.trim().length > 0 && !submitClicked) ? 'pointer' : 'not-allowed'
                 }}
                 disabled={graphThoughts.trim().length === 0 || submitClicked}
-                onClick={() => {
+                onClick={async () => {
                   console.log('Graph thoughts:', graphThoughts);
                   setSubmitClicked(true);
                   setShowResultsPage(true);
+                  
+                  // Save to MongoDB and fetch existing submissions
+                  await saveSubmission();
+                  
                   // Scroll to the new results page
                   setTimeout(() => {
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -520,9 +575,7 @@ export default function Home() {
               border: '1px solid #ccc', 
               borderRadius: '0 8px 8px 8px', 
               padding: '20px',
-              minHeight: '300px',
-              maxHeight: '400px',
-              overflowY: 'auto'
+              minHeight: '300px'
             }}>
               {activeTab === 'table' && (
                 <div>
@@ -531,23 +584,46 @@ export default function Home() {
                     <strong>Object Description:</strong> A statistical table showing mean values, standard deviations, and p-values for Control and Treatment A conditions, measured at pre and post time points.
                   </div>
                   
-                  <h5 className="text-sm font-semibold mb-2">User Submissions:</h5>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: '#f1f5f9' }}>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>Submission #</th>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>User Analysis</th>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>Timestamp</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>1</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{userThoughts || 'No analysis provided'}</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{new Date().toLocaleString()}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  {loading ? (
+                    <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
+                  ) : (
+                    <div style={{ border: '1px solid black', borderRadius: '4px' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                          <tr style={{ backgroundColor: '#6b7280' }}>
+                            <th style={{ border: '1px solid black', padding: '12px', textAlign: 'left', fontWeight: 'bold', color: 'white' }}>User Analysis</th>
+                          </tr>
+                        </thead>
+                      </table>
+                      <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                          <tbody>
+                            {submissions.length > 0 ? (
+                              submissions.map((submission) => (
+                                <tr key={submission._id}>
+                                  <td style={{ border: '1px solid black', borderTop: 'none', padding: '12px', verticalAlign: 'top', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{submission.tableAnalysis}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td style={{ border: '1px solid black', borderTop: 'none', padding: '12px', textAlign: 'center', fontStyle: 'italic' }}>No submissions yet</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <button 
+                      className="button" 
+                      style={newBaseButtonStyle}
+                      onClick={restartApplication}
+                    >
+                      START OVER
+                    </button>
+                  </div>
                 </div>
               )}
               
@@ -558,23 +634,46 @@ export default function Home() {
                     <strong>Object Description:</strong> A bar chart displaying mean values by condition and time, with light orange bars representing pre-treatment measurements and light aquamarine bars representing post-treatment measurements.
                   </div>
                   
-                  <h5 className="text-sm font-semibold mb-2">User Submissions:</h5>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-                    <thead>
-                      <tr style={{ backgroundColor: '#f1f5f9' }}>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>Submission #</th>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>User Analysis</th>
-                        <th style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>Timestamp</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>1</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{graphThoughts || 'No analysis provided'}</td>
-                        <td style={{ border: '1px solid #ccc', padding: '8px' }}>{new Date().toLocaleString()}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  {loading ? (
+                    <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
+                  ) : (
+                    <div style={{ border: '1px solid black', borderRadius: '4px' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                          <tr style={{ backgroundColor: '#6b7280' }}>
+                            <th style={{ border: '1px solid black', padding: '12px', textAlign: 'left', fontWeight: 'bold', color: 'white' }}>User Analysis</th>
+                          </tr>
+                        </thead>
+                      </table>
+                      <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                          <tbody>
+                            {submissions.length > 0 ? (
+                              submissions.map((submission) => (
+                                <tr key={submission._id}>
+                                  <td style={{ border: '1px solid black', borderTop: 'none', padding: '12px', verticalAlign: 'top', whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>{submission.graphAnalysis}</td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td style={{ border: '1px solid black', borderTop: 'none', padding: '12px', textAlign: 'center', fontStyle: 'italic' }}>No submissions yet</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                    <button 
+                      className="button" 
+                      style={newBaseButtonStyle}
+                      onClick={restartApplication}
+                    >
+                      START OVER
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

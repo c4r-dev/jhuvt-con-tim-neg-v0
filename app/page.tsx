@@ -290,7 +290,7 @@ export default function Home() {
                 }}
                 disabled={userThoughts.trim().length === 0 || continueClicked}
                 onClick={() => {
-                  console.log('User thoughts:', userThoughts);
+                  // console.log('User thoughts:', userThoughts);
                   setShowGraphBox(true);
                   setContinueClicked(true);
                   // Scroll to the new box
@@ -492,7 +492,7 @@ export default function Home() {
                 }}
                 disabled={graphThoughts.trim().length === 0 || submitClicked}
                 onClick={async () => {
-                  console.log('Graph thoughts:', graphThoughts);
+                  // console.log('Graph thoughts:', graphThoughts);
                   setSubmitClicked(true);
                   setShowResultsPage(true);
                   

@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
 
       <head>
-        <title>Time and Negative Controls</title>
+        <title>Difference in Nominal Significance error (DINS)</title>
         <meta name="description" content="Difference in Nominal Significance error (DINS)" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>

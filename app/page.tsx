@@ -580,10 +580,6 @@ export default function Home() {
               {activeTab === 'table' && (
                 <div>
                   <h4 className="text-md font-semibold mb-3">Analysis Object: Statistical Results Table</h4>
-                  <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
-                    <strong>Object Description:</strong> A statistical table showing mean values, standard deviations, and p-values for Control and Treatment A conditions, measured at pre and post time points.
-                  </div>
-                  
                   {loading ? (
                     <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
                   ) : (
@@ -630,10 +626,6 @@ export default function Home() {
               {activeTab === 'graph' && (
                 <div>
                   <h4 className="text-md font-semibold mb-3">Analysis Object: Bar Chart Visualization</h4>
-                  <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
-                    <strong>Object Description:</strong> A bar chart displaying mean values by condition and time, with light orange bars representing pre-treatment measurements and light aquamarine bars representing post-treatment measurements.
-                  </div>
-                  
                   {loading ? (
                     <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
                   ) : (

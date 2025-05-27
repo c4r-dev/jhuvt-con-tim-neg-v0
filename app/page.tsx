@@ -154,20 +154,19 @@ export default function Home() {
     <div style={{ padding: '20px', maxWidth: '800px', margin: '20px auto 20px auto' }}>
       <div className="border border-black rounded-lg p-6 mb-8 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginBottom: '32px'}}>
         <div className="flex flex-col p-6 bg-gray-50 border border-gray-200 rounded-lg">
-          <h2 className="text-lg font-semibold mb-4">Research question specifying treatments and dependent variable:</h2>
-          <p className="text-blue-700 font-medium mb-6">Does compound A ameliorate grip strength in a mouse model of Amyotrophic Lateral Sclerosis</p>
+          <h2 className="text-lg font-semibold mb-4">Does compound A ameliorate grip strength in a mouse model of Amyotrophic Lateral Sclerosis?</h2>
           
           <h3 className="text-lg font-semibold mb-3">Study Description</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
             A research team develops a two-arm study assessing the efficacy of Compound A on treating grip strength impairment in cases of amyotrophic lateral sclerosis (ALS) in a model mouse organism. The team masks their sample allocation and randomly assigns their study population to a control group administered Placebo D and a treatment group administered Compound A. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec or each sample in each group prior to the treatment (day 110) and after the treatment (day 120).
           </p>
           
-          <h3 className="text-lg font-semibold mb-3">Likely value range for dependent variable with units:</h3>
+          {/* <h3 className="text-lg font-semibold mb-3">Likely value range for dependent variable with units:</h3>
           <div className="text-gray-700">
             <p className="mb-2">0-180 seconds (rotarod performance).</p>
             <p className="ml-8 mb-1">180 (control)</p>
             <p className="ml-8">80-140 (ALS)</p>
-          </div>
+          </div> */}
         </div>
         
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
@@ -263,7 +262,7 @@ export default function Home() {
           </div>
           
           <div style={{ marginTop: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">Your thoughts on the results:</h3>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
             <textarea
               value={userThoughts}
               onChange={(e) => setUserThoughts(e.target.value)}
@@ -310,10 +309,10 @@ export default function Home() {
         <div className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
           <h2 className="text-xl font-bold mb-6 text-center">Data Visualization</h2>
           
-          <div style={{ marginBottom: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">Instructions:</h3>
-            <p className="text-gray-700 mb-4">Examine the graph below showing the data distribution. Consider the visual patterns, outliers, and how the graph supports or contradicts your statistical analysis.</p>
-          </div>
+          {/* <div style={{ marginBottom: '32px' }}>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
+            <p className="text-gray-700 mb-4"></p>
+          </div> */}
           
           <div style={{ 
             backgroundColor: 'white', 
@@ -465,7 +464,7 @@ export default function Home() {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-3">Your analysis of the graph:</h3>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
             <textarea
               value={graphThoughts}
               onChange={(e) => setGraphThoughts(e.target.value)}

@@ -262,7 +262,7 @@ export default function Home() {
           </div>
           
           <div style={{ marginTop: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
             <textarea
               value={userThoughts}
               onChange={(e) => setUserThoughts(e.target.value)}
@@ -310,7 +310,7 @@ export default function Home() {
           <h2 className="text-xl font-bold mb-6 text-center">Data Visualization</h2>
           
           {/* <div style={{ marginBottom: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
             <p className="text-gray-700 mb-4"></p>
           </div> */}
           
@@ -464,7 +464,7 @@ export default function Home() {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Are there any claims you can make about your treatment?</h3>
+            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
             <textarea
               value={graphThoughts}
               onChange={(e) => setGraphThoughts(e.target.value)}

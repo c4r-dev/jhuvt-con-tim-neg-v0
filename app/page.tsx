@@ -14,6 +14,7 @@ interface DataPoint {
 interface Statistics {
   mean: number;
   standardDeviation: number;
+  standardError: number;
   count: number;
 }
 
@@ -47,6 +48,10 @@ export default function Home() {
   const calculateStandardDeviation = (values: number[], mean: number): number => {
     const variance = values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / (values.length - 1);
     return Math.sqrt(variance);
+  };
+
+  const calculateStandardError = (standardDeviation: number, count: number): number => {
+    return standardDeviation / Math.sqrt(count);
   };
 
   // Function to save submission to MongoDB
@@ -108,9 +113,11 @@ export default function Home() {
     Object.entries(groupedData).forEach(([key, values]) => {
       const mean = calculateMean(values);
       const standardDeviation = calculateStandardDeviation(values, mean);
+      const standardError = calculateStandardError(standardDeviation, values.length);
       newStatistics[key] = {
         mean,
         standardDeviation,
+        standardError,
         count: values.length
       };
     });
@@ -158,7 +165,7 @@ export default function Home() {
           
           <h3 className="text-lg font-semibold mb-3">Study Description</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            A research team develops a two-arm study assessing the efficacy of Compound A on treating grip strength impairment in cases of amyotrophic lateral sclerosis (ALS) in a model mouse organism. The team masks their sample allocation and randomly assigns their study population to a control group administered Placebo D and a treatment group administered Compound A. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec or each sample in each group prior to the treatment (day 110) and after the treatment (day 120).
+            A research team is assessing the efficacy of Compound A on improving grip strength in an ALS (amyotrophic lateral sclerosis) model mouse. The team randomizes the study population and masks the samples of compound A and placebo D. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec.
           </p>
           
           {/* <h3 className="text-lg font-semibold mb-3">Likely value range for dependent variable with units:</h3>
@@ -200,6 +207,7 @@ export default function Home() {
                   <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>Time</th>
                   <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>Mean (seconds)</th>
                   <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>SD (seconds)</th>
+                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>SE (seconds)</th>
                   <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>P-value</th>
                 </tr>
               </thead>
@@ -239,8 +247,9 @@ export default function Home() {
                     <tr key={key} className="hover:bg-gray-50" style={{backgroundColor: rowColor}}>
                       <td className="border border-gray-300 px-4 py-3" style={{border: '1px solid black'}}>{conditionDisplay}</td>
                       <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{timeDisplay}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.mean.toFixed(5)}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.standardDeviation.toFixed(5)}</td>
+                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.mean.toFixed(1)}</td>
+                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.standardDeviation.toFixed(1)}</td>
+                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.standardError.toFixed(1)}</td>
                       <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>
                         {pValue === 'NA' ? (
                           <span className="text-gray-400">NA</span>
@@ -262,7 +271,7 @@ export default function Home() {
           </div>
           
           <div style={{ marginTop: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
+            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
             <textarea
               value={userThoughts}
               onChange={(e) => setUserThoughts(e.target.value)}
@@ -292,9 +301,17 @@ export default function Home() {
                   // console.log('User thoughts:', userThoughts);
                   setShowGraphBox(true);
                   setContinueClicked(true);
-                  // Scroll to the new box
+                  // Scroll so the Data Visualization box is at the top of the viewport
                   setTimeout(() => {
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    const dataVizElement = document.getElementById('data-visualization');
+                    if (dataVizElement) {
+                      const rect = dataVizElement.getBoundingClientRect();
+                      const absoluteTop = window.pageYOffset + rect.top - 65; // 65px above to show full top
+                      window.scrollTo({
+                        top: absoluteTop,
+                        behavior: 'smooth'
+                      });
+                    }
                   }, 100);
                 }}
               >
@@ -306,11 +323,11 @@ export default function Home() {
       )}
       
       {showGraphBox && (
-        <div className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
+        <div id="data-visualization" className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
           <h2 className="text-xl font-bold mb-6 text-center">Data Visualization</h2>
           
           {/* <div style={{ marginBottom: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
+            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
             <p className="text-gray-700 mb-4"></p>
           </div> */}
           
@@ -416,10 +433,51 @@ export default function Home() {
                         strokeWidth="1"
                       />
                       
-                      {/* Value label on top of bar */}
+                      {/* Error bar */}
+                      {(() => {
+                        const errorBarHeight = ((stats.standardError) / range) * 150; // Scale SE to chart
+                        const errorBarTop = yPos - errorBarHeight;
+                        const errorBarBottom = yPos + errorBarHeight;
+                        const errorBarWidth = barWidth * 0.5; // 50% overlap
+                        const errorBarX = xPos + (barWidth - errorBarWidth) / 2;
+                        
+                        return (
+                          <g>
+                            {/* Main error bar line */}
+                            <line
+                              x1={xPos + barWidth/2}
+                              y1={errorBarTop}
+                              x2={xPos + barWidth/2}
+                              y2={errorBarBottom}
+                              stroke="#000"
+                              strokeWidth="2"
+                            />
+                            {/* Top cap */}
+                            <line
+                              x1={errorBarX}
+                              y1={errorBarTop}
+                              x2={errorBarX + errorBarWidth}
+                              y2={errorBarTop}
+                              stroke="#000"
+                              strokeWidth="2"
+                            />
+                            {/* Bottom cap */}
+                            <line
+                              x1={errorBarX}
+                              y1={errorBarBottom}
+                              x2={errorBarX + errorBarWidth}
+                              y2={errorBarBottom}
+                              stroke="#000"
+                              strokeWidth="2"
+                            />
+                          </g>
+                        );
+                      })()}
+                      
+                      {/* Value label on top of error bar */}
                       <text
                         x={xPos + barWidth/2}
-                        y={yPos - 5}
+                        y={yPos - ((stats.standardError / range) * 150) - 10}
                         textAnchor="middle"
                         fontSize="10"
                         fontWeight="bold"
@@ -464,7 +522,7 @@ export default function Home() {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-3">What conclusions can you gather from these results? Is there any information you would like to see that could help you draw one?</h3>
+            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
             <textarea
               value={graphThoughts}
               onChange={(e) => setGraphThoughts(e.target.value)}
@@ -498,9 +556,17 @@ export default function Home() {
                   // Save to MongoDB and fetch existing submissions
                   await saveSubmission();
                   
-                  // Scroll to the new results page
+                  // Scroll to the Results & Analysis section
                   setTimeout(() => {
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    const resultsElement = document.getElementById('results-analysis');
+                    if (resultsElement) {
+                      const rect = resultsElement.getBoundingClientRect();
+                      const absoluteTop = window.pageYOffset + rect.top - 65; // 65px above to show full top
+                      window.scrollTo({
+                        top: absoluteTop,
+                        behavior: 'smooth'
+                      });
+                    }
                   }, 100);
                 }}
               >
@@ -512,7 +578,7 @@ export default function Home() {
       )}
       
       {showResultsPage && (
-        <div className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
+        <div id="results-analysis" className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
           <h2 className="text-xl font-bold mb-6 text-center">Results & Analysis</h2>
           
           <div style={{ marginBottom: '32px' }}>
@@ -521,17 +587,14 @@ export default function Home() {
               <p className="mb-3">
                 The <strong>Difference in Nominal Significance (DINS)</strong> error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
               </p>
-              <p className="mb-3">
-                This error is problematic because the absence of statistical significance in one group does not necessarily mean that group differs from a group that does show significance. To properly compare treatments, researchers should directly compare the two groups rather than comparing each group&apos;s significance status.
-              </p>
               <p>
-                In your analysis, both conditions showed non-significant results (Control: p = 0.34230, Treatment A: p = 0.87741), but it would still be incorrect to conclude they are equivalent without proper comparative statistical testing.
+                This error is problematic because the absence of statistical significance in one group does not necessarily mean that group differs from a group that does show significance. To properly compare treatments, researchers should directly compare the two groups rather than comparing each group&apos;s significance status.
               </p>
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">User Submission Analysis</h3>
+            <h3 className="text-lg font-semibold mb-4">Responses</h3>
             
             {/* Tab Interface */}
             <div style={{ marginBottom: '20px' }}>
@@ -549,7 +612,7 @@ export default function Home() {
                     marginRight: '4px'
                   }}
                 >
-                  Statistical Table Analysis
+                  Statistical Table
                 </button>
                 <button
                   onClick={() => setActiveTab('graph')}
@@ -563,7 +626,7 @@ export default function Home() {
                     fontWeight: 'bold'
                   }}
                 >
-                  Graph Analysis
+                  Graph with Error Bars
                 </button>
               </div>
             </div>
@@ -578,18 +641,10 @@ export default function Home() {
             }}>
               {activeTab === 'table' && (
                 <div>
-                  <h4 className="text-md font-semibold mb-3">Analysis Object: Statistical Results Table</h4>
                   {loading ? (
                     <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
                   ) : (
                     <div style={{ border: '1px solid black', borderRadius: '4px' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-                          <tr style={{ backgroundColor: '#6b7280' }}>
-                            <th style={{ border: '1px solid black', padding: '12px', textAlign: 'left', fontWeight: 'bold', color: 'white' }}>User Analysis</th>
-                          </tr>
-                        </thead>
-                      </table>
                       <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                           <tbody>
@@ -624,18 +679,10 @@ export default function Home() {
               
               {activeTab === 'graph' && (
                 <div>
-                  <h4 className="text-md font-semibold mb-3">Analysis Object: Bar Chart Visualization</h4>
                   {loading ? (
                     <div style={{ textAlign: 'center', padding: '20px' }}>Loading submissions...</div>
                   ) : (
                     <div style={{ border: '1px solid black', borderRadius: '4px' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-                          <tr style={{ backgroundColor: '#6b7280' }}>
-                            <th style={{ border: '1px solid black', padding: '12px', textAlign: 'left', fontWeight: 'bold', color: 'white' }}>User Analysis</th>
-                          </tr>
-                        </thead>
-                      </table>
                       <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                           <tbody>

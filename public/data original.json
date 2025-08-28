@@ -2,225 +2,193 @@
   {
     "condition": "control",
     "time": "pre",
-    "value": 74.11263325849633,
-    "id": 1,
+    "value": 117.41916894293337,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 106.1275291251074,
-    "id": 1,
+    "value": 127.60340608170378,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 103.26190192943457,
-    "id": 2,
+    "value": 84.31494157167856,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 124.58891203080297,
-    "id": 2,
+    "value": 143.26687618432823,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 93.94515078275724,
-    "id": 3,
+    "value": 78.70603657207823,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 154.45733513496077,
-    "id": 3,
+    "value": 68.07889558155402,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 107.56656303245211,
-    "id": 4,
+    "value": 36.87089158190449,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 139.32720694120013,
-    "id": 4,
+    "value": 72.5662002658425,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 110.03408643366265,
-    "id": 5,
+    "value": 97.26256822674678,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 89.01030164175377,
-    "id": 5,
+    "value": 100.31126476898163,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 94.0574853839549,
-    "id": 6,
+    "value": 41.19066142848961,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 105.78259987605036,
-    "id": 6,
+    "value": 78.61796760080031,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 115.77650786542287,
-    "id": 7,
+    "value": 102.65725209922081,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 109.68102136771351,
-    "id": 7,
+    "value": 115.52370602623188,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 135.4880494196505,
-    "id": 8,
+    "value": 116.40226691460384,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 143.05661224063996,
-    "id": 8,
+    "value": 138.77063606265605,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 108.11506826125274,
-    "id": 9,
+    "value": 98.08536646281998,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 141.4619622762224,
-    "id": 9,
+    "value": 74.19675945169658,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 72.01405924400837,
-    "id": 10,
+    "value": 83.8672281184305,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 86.39777207462747,
-    "id": 10,
+    "value": 128.46820166674323,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 99.8733494135265,
-    "id": 11,
+    "value": 87.87750967817031,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 100.2753112114237,
-    "id": 11,
+    "value": 75.0896220099966,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 132.78980595430082,
-    "id": 12,
+    "value": 54.3738313204,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 136.59787061483536,
-    "id": 12,
+    "value": 87.97388256079881,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 101.98571592794812,
-    "id": 13,
+    "value": 120.23043994877878,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 108.67673101232675,
-    "id": 13,
+    "value": 108.8972265848422,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 66.68098017057156,
-    "id": 14,
+    "value": 86.56165288480757,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 84.27975126871142,
-    "id": 14,
+    "value": 131.11615411721976,
     "grp": "treatment_Apost"
   },
   {
     "condition": "control",
     "time": "pre",
-    "value": 58.407859855282254,
-    "id": 15,
+    "value": 88.10681923173804,
     "grp": "controlpre"
   },
   {
     "condition": "control",
     "time": "post",
-    "value": 74.32189118794138,
-    "id": 15,
+    "value": 84.4663232124388,
     "grp": "controlpost"
   },
   {
     "condition": "treatment_A",
     "time": "pre",
-    "value": 89.05739204000334,
-    "id": 16,
+    "value": 114.29349398345198,
     "grp": "treatment_Apre"
   },
   {
     "condition": "treatment_A",
     "time": "post",
-    "value": 98.75741846070112,
-    "id": 16,
+    "value": 161.34186735574016,
     "grp": "treatment_Apost"
   }
 ]

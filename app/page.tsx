@@ -136,7 +136,7 @@ export default function Home() {
     if (showResultsPage && submissions.length === 0) {
       fetchSubmissions();
     }
-  }, [showResultsPage]);
+  }, [showResultsPage, submissions.length]);
   
   // Function to restart the application
   const restartApplication = () => {

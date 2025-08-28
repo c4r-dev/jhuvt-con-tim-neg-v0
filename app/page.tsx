@@ -168,17 +168,17 @@ export default function Home() {
             A research team is assessing the efficacy of Compound A on improving grip strength in an ALS (amyotrophic lateral sclerosis) model mouse. The team randomizes the study population and masks the samples of compound A and placebo D. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec.
           </p>
           
-          {/* <h3 className="text-lg font-semibold mb-3">Likely value range for dependent variable with units:</h3>
-          <div className="text-gray-700">
-            <p className="mb-2">0-180 seconds (rotarod performance).</p>
-            <p className="ml-8 mb-1">180 (control)</p>
-            <p className="ml-8">80-140 (ALS)</p>
+          {/* <h3>Likely value range for dependent variable with units:</h3>
+          <div>
+            <p>0-180 seconds (rotarod performance).</p>
+            <p>180 (control)</p>
+            <p>80-140 (ALS)</p>
           </div> */}
         </div>
         
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
           <button 
-            className="button" 
+className="button" 
             style={{
               ...newBaseButtonStyle,
               opacity: showResultsClicked ? 0.5 : 1,
@@ -291,7 +291,7 @@ export default function Home() {
             
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <button 
-                className="button" 
+    className="button" 
                 style={{
                   ...newBaseButtonStyle,
                   opacity: (userThoughts.trim().length > 0 && !continueClicked) ? 1 : 0.5,
@@ -327,7 +327,7 @@ export default function Home() {
           
           {/* <div style={{ marginBottom: '32px' }}>
             <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>More information has been added. Does this change how you interpret the results of the study?</h3>
-            <p className="text-gray-700 mb-4"></p>
+            <p></p>
           </div> */}
           
           <div style={{ 
@@ -540,7 +540,7 @@ export default function Home() {
             
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <button 
-                className="button" 
+    className="button" 
                 style={{
                   ...newBaseButtonStyle,
                   opacity: (graphThoughts.trim().length > 0 && !submitClicked) ? 1 : 0.5,
@@ -716,7 +716,6 @@ export default function Home() {
               <div style={{ display: 'flex', borderBottom: '2px solid #d1d5db' }}>
                 <button
                   onClick={() => setActiveTab('table')}
-                  className=""
                   style={{
                     padding: '12px 24px',
                     border: 'none',
@@ -734,7 +733,6 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => setActiveTab('graph')}
-                  className=""
                   style={{
                     padding: '12px 24px',
                     border: 'none',
@@ -782,7 +780,7 @@ export default function Home() {
                   
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     <button 
-                      className="button" 
+          className="button" 
                       style={newBaseButtonStyle}
                       onClick={restartApplication}
                     >
@@ -820,7 +818,7 @@ export default function Home() {
                   
                   <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                     <button 
-                      className="button" 
+          className="button" 
                       style={newBaseButtonStyle}
                       onClick={restartApplication}
                     >

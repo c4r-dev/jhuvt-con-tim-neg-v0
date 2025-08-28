@@ -217,13 +217,15 @@ export default function Home() {
                   
                   Object.entries(statistics).forEach(([key, stats]) => {
                     const parts = key.split('_');
-                    let condition, time;
+                    let condition: string;
+                    let time: 'pre' | 'post';
+                    
                     if (parts.length === 3 && parts[0] === 'treatment') {
                       condition = 'treatment_A';
-                      time = parts[2];
+                      time = parts[2] as 'pre' | 'post';
                     } else {
                       condition = parts[0];
-                      time = parts[1];
+                      time = parts[1] as 'pre' | 'post';
                     }
                     
                     if (!groupedStats[condition]) {

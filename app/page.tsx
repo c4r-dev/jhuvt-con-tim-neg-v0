@@ -158,13 +158,13 @@ export default function Home() {
   };
   
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '20px auto 20px auto' }}>
-      <div className="border border-black rounded-lg p-6 mb-8 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginBottom: '32px'}}>
-        <div className="flex flex-col p-6 bg-gray-50 border border-gray-200 rounded-lg">
-          <h2 className="text-lg font-semibold mb-4">Does compound A ameliorate grip strength in a mouse model of Amyotrophic Lateral Sclerosis?</h2>
+    <div style={{ padding: '20px', maxWidth: '80%', margin: '20px auto' }}>
+      <div style={{ backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginBottom: '32px' }}>
+        <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Does compound A ameliorate grip strength in a mouse model of Amyotrophic Lateral Sclerosis?</h2>
           
-          <h3 className="text-lg font-semibold mb-3">Study Description</h3>
-          <p className="text-gray-700 mb-6 leading-relaxed">
+          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>Study Description</h3>
+          <p style={{ color: '#374151', marginBottom: '24px', lineHeight: '1.6' }}>
             A research team is assessing the efficacy of Compound A on improving grip strength in an ALS (amyotrophic lateral sclerosis) model mouse. The team randomizes the study population and masks the samples of compound A and placebo D. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec.
           </p>
           
@@ -196,82 +196,81 @@ export default function Home() {
       </div>
 
       {showResults && (
-        <div className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px'}}>
-          <h2 className="text-xl font-bold mb-6 text-center">Statistical Results</h2>
+        <div style={{ backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center' }}>Statistical Results</h2>
           
-          <div className="overflow-x-auto flex justify-center">
-            <table className="border-collapse border border-gray-300" style={{border: '1px solid black', margin: '0 auto', width: '80%'}}>
+          <div style={{ overflowX: 'auto', display: 'flex', justifyContent: 'center' }}>
+            <table style={{ borderCollapse: 'collapse', border: '1px solid black', margin: '0 auto', width: '90%' }}>
               <thead>
-                <tr className="bg-gray-100" style={{backgroundColor: '#6b7280'}}>
-                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold" style={{color: 'white', border: '1px solid black'}}>Condition</th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>Time</th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>Mean (seconds)</th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>SD (seconds)</th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>SE (seconds)</th>
-                  <th className="border border-gray-300 px-4 py-3 text-center font-semibold" style={{color: 'white', border: '1px solid black'}}>P-value</th>
+                <tr style={{ backgroundColor: '#6b7280' }}>
+                  <th style={{ border: '1px solid black', padding: '12px', textAlign: 'left', fontWeight: '600', color: 'white' }}>Group</th>
+                  <th style={{ border: '1px solid black', padding: '12px', textAlign: 'center', fontWeight: '600', color: 'white' }}>Pre-training Mean (SE)</th>
+                  <th style={{ border: '1px solid black', padding: '12px', textAlign: 'center', fontWeight: '600', color: 'white' }}>Post-training Mean (SE)</th>
+                  <th style={{ border: '1px solid black', padding: '12px', textAlign: 'center', fontWeight: '600', color: 'white' }}>p-value</th>
+                  <th style={{ border: '1px solid black', padding: '12px', textAlign: 'center', fontWeight: '600', color: 'white' }}>Significance (p&lt;0.05)</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(statistics).map(([key, stats]) => {
-                  const parts = key.split('_');
-                  let condition, time;
-                  if (parts.length === 3 && parts[0] === 'treatment') {
-                    // For treatment_A_pre or treatment_A_post
-                    condition = 'treatment_A';
-                    time = parts[2];
-                  } else {
-                    // For control_pre or control_post
-                    condition = parts[0];
-                    time = parts[1];
-                  }
-                  const conditionDisplay = condition === 'treatment_A' ? 'Treatment A' : 
-                                         condition.charAt(0).toUpperCase() + condition.slice(1);
-                  const timeDisplay = time; // Use actual time values from data
+                {(() => {
+                  // Group data by condition for the new table format
+                  const groupedStats: Record<string, {pre?: any, post?: any}> = {};
                   
-                  // Get relevant p-value for this row using fixed values
-                  let pValue: number | string | null = null;
+                  Object.entries(statistics).forEach(([key, stats]) => {
+                    const parts = key.split('_');
+                    let condition, time;
+                    if (parts.length === 3 && parts[0] === 'treatment') {
+                      condition = 'treatment_A';
+                      time = parts[2];
+                    } else {
+                      condition = parts[0];
+                      time = parts[1];
+                    }
+                    
+                    if (!groupedStats[condition]) {
+                      groupedStats[condition] = {};
+                    }
+                    groupedStats[condition][time] = stats;
+                  });
                   
-                  if (condition === 'control' && time === 'pre') {
-                    pValue = 'NA';
-                  } else if (condition === 'control' && time === 'post') {
-                    pValue = 0.34230;
-                  } else if (condition === 'treatment_A' && time === 'pre') {
-                    pValue = 'NA';
-                  } else if (condition === 'treatment_A' && time === 'post') {
-                    pValue = 0.00001;
-                  }
-                  
-                  const rowColor = time === 'pre' ? '#ff9966' : '#66cccc'; // Same colors as graph
-                  
-                  return (
-                    <tr key={key} className="hover:bg-gray-50" style={{backgroundColor: rowColor}}>
-                      <td className="border border-gray-300 px-4 py-3" style={{border: '1px solid black'}}>{conditionDisplay}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{timeDisplay}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.mean.toFixed(1)}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.standardDeviation.toFixed(1)}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>{stats.standardError.toFixed(1)}</td>
-                      <td className="border border-gray-300 px-4 py-3 text-center" style={{border: '1px solid black', textAlign: 'center'}}>
-                        {pValue === 'NA' ? (
-                          <span className="text-gray-400">NA</span>
-                        ) : pValue !== null && typeof pValue === 'number' ? (
-                          <span className={pValue < 0.05 ? 'text-red-600 font-semibold' : 'text-gray-700'}>
-                            {pValue.toFixed(5)}
-                            <br />
-                            <span className="text-xs text-gray-500"></span>
+                  return Object.entries(groupedStats).map(([condition, timeStats]) => {
+                    const conditionDisplay = condition === 'treatment_A' ? 'Treatment' : 'Control';
+                    
+                    // Get p-value for post-training comparison
+                    let pValue: number | string = condition === 'control' ? 0.34230 : 0.00001;
+                    
+                    // Determine significance
+                    const isSignificant = typeof pValue === 'number' && pValue < 0.05;
+                    const significanceText = isSignificant ? 'Significant*' : 'Not significant';
+                    
+                    return (
+                      <tr key={condition}>
+                        <td style={{ border: '1px solid black', padding: '12px' }}>{conditionDisplay}</td>
+                        <td style={{ border: '1px solid black', padding: '12px', textAlign: 'center' }}>
+                          {timeStats.pre ? `${timeStats.pre.mean.toFixed(1)} (${timeStats.pre.standardError.toFixed(1)})` : 'N/A'}
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '12px', textAlign: 'center' }}>
+                          {timeStats.post ? `${timeStats.post.mean.toFixed(1)} (${timeStats.post.standardError.toFixed(1)})` : 'N/A'}
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '12px', textAlign: 'center' }}>
+                          <span style={{ color: pValue < 0.05 ? '#dc2626' : '#374151', fontWeight: pValue < 0.05 ? '600' : 'normal' }}>
+                            {typeof pValue === 'number' ? pValue.toFixed(5) : pValue}
                           </span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                        </td>
+                        <td style={{ border: '1px solid black', padding: '12px', textAlign: 'center' }}>
+                          <span style={{ fontWeight: isSignificant ? '600' : 'normal' }}>
+                            {significanceText}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  });
+                })()}
               </tbody>
             </table>
           </div>
           
           <div style={{ marginTop: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>More information has been added. Does this change how you interpret the results of the study?</h3>
             <textarea
               value={userThoughts}
               onChange={(e) => setUserThoughts(e.target.value)}
@@ -298,15 +297,13 @@ export default function Home() {
                 }}
                 disabled={userThoughts.trim().length === 0 || continueClicked}
                 onClick={() => {
-                  // console.log('User thoughts:', userThoughts);
                   setShowGraphBox(true);
                   setContinueClicked(true);
-                  // Scroll so the Data Visualization box is at the top of the viewport
                   setTimeout(() => {
                     const dataVizElement = document.getElementById('data-visualization');
                     if (dataVizElement) {
                       const rect = dataVizElement.getBoundingClientRect();
-                      const absoluteTop = window.pageYOffset + rect.top - 65; // 65px above to show full top
+                      const absoluteTop = window.pageYOffset + rect.top - 65;
                       window.scrollTo({
                         top: absoluteTop,
                         behavior: 'smooth'
@@ -323,11 +320,11 @@ export default function Home() {
       )}
       
       {showGraphBox && (
-        <div id="data-visualization" className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
-          <h2 className="text-xl font-bold mb-6 text-center">Data Visualization</h2>
+        <div id="data-visualization" style={{ backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center' }}>Data Visualization</h2>
           
           {/* <div style={{ marginBottom: '32px' }}>
-            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>More information has been added. Does this change how you interpret the results of the study?</h3>
             <p className="text-gray-700 mb-4"></p>
           </div> */}
           
@@ -522,7 +519,7 @@ export default function Home() {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-3">More information has been added. Does this change how you interpret the results of the study?</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>More information has been added. Does this change how you interpret the results of the study?</h3>
             <textarea
               value={graphThoughts}
               onChange={(e) => setGraphThoughts(e.target.value)}
@@ -578,52 +575,174 @@ export default function Home() {
       )}
       
       {showResultsPage && (
-        <div id="results-analysis" className="border border-black rounded-lg p-6 bg-gray-100 shadow-sm" style={{backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px'}}>
-          <h2 className="text-xl font-bold mb-6 text-center">Results & Analysis</h2>
+        <div id="results-analysis" style={{ backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginTop: '32px' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center' }}>Results & Analysis</h2>
           
           <div style={{ marginBottom: '32px' }}>
-            <h3 className="text-lg font-semibold mb-4">Difference in Nominal Significance (DINS) Error</h3>
-            <div className="text-gray-700 leading-relaxed" style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #ccc' }}>
-              <p className="mb-3">
-                The <strong>Difference in Nominal Significance (DINS)</strong> error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
-              </p>
-              <p>
-                This error is problematic because the absence of statistical significance in one group does not necessarily mean that group differs from a group that does show significance. To properly compare treatments, researchers should directly compare the two groups rather than comparing each group&apos;s significance status.
-              </p>
+            <div style={{ 
+              backgroundColor: 'white', 
+              padding: '32px', 
+              borderRadius: '8px', 
+              border: '1px solid #ccc', 
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '32px'
+            }}>
+              {/* DINS Error Description */}
+              <div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Difference in Nominal Significance (DINS) Error</h3>
+                <div style={{ color: 'black', lineHeight: '1.6' }}>
+                  <p style={{ marginBottom: '12px' }}>
+                    The <strong>Difference in Nominal Significance (DINS)</strong> error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
+                  </p>
+                  <p>
+                    This error is problematic because the absence of statistical significance in one group does not constitute a test of whether the changes within that group . One way to properly compare treatments in this case would be a repeated measures ANOVA:
+                  </p>
+                </div>
+              </div>
+
+              {/* ANOVA Table */}
+              <div>
+                <h4 style={{ fontFamily: 'General Sans, sans-serif', fontSize: '18px', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center', color: '#333' }}>
+                  Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
+                </h4>
+                
+                <div style={{ 
+                  fontFamily: 'JetBrains Mono, monospace', 
+                  fontSize: '15px', 
+                  backgroundColor: '#f8f9fa', 
+                  padding: '24px', 
+                  borderRadius: '8px', 
+                  border: '1px solid #e9ecef',
+                  boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                  overflow: 'auto'
+                }}>
+                  <table style={{ 
+                    width: '100%', 
+                    borderCollapse: 'separate', 
+                    borderSpacing: '0 8px',
+                    fontFamily: 'JetBrains Mono, monospace'
+                  }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #dee2e6' }}>
+                        <th style={{ textAlign: 'left', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}></th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Sum Sq</th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>num Df</th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Error SS</th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>den Df</th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>F value</th>
+                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Pr(&gt;F)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style={{ backgroundColor: '#ffffff' }}>
+                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>(Intercept)</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>354054</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>13331.0</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>371.8220</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', color: '#d73527' }}>1.763e-11 ***</td>
+                      </tr>
+                      <tr style={{ backgroundColor: '#f8f9fa' }}>
+                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>169</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>13331.0</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.1770</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.680340</td>
+                      </tr>
+                      <tr style={{ backgroundColor: '#ffffff' }}>
+                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>time</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1795</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>9.5351</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', color: '#d73527' }}>0.008023 **</td>
+                      </tr>
+                      <tr style={{ backgroundColor: '#f8f9fa' }}>
+                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition:time</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.0025</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.960732</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <div style={{ 
+                    borderTop: '1px solid #dee2e6', 
+                    paddingTop: '16px', 
+                    marginTop: '16px',
+                    fontSize: '13px',
+                    color: '#666'
+                  }}>
+                    ---
+                  </div>
+                  
+                  <div style={{ 
+                    fontSize: '13px', 
+                    marginTop: '12px',
+                    fontStyle: 'italic',
+                    color: '#666'
+                  }}>
+                    Signif. codes: 0 &apos;***&apos; 0.001 &apos;**&apos; 0.01 &apos;*&apos; 0.05 &apos;.&apos; 0.1 &apos; &apos; 1
+                  </div>
+                </div>
+                
+                <div style={{ marginTop: '16px' }}>
+                  <div style={{ fontSize: '1rem', color: 'black', lineHeight: '1.6' }}>
+                    <p>
+                      While there is a significant effect of &quot;time&quot;, this is an effect that is true across both groups and is therefore not an answer to our question. We want to know if there is a difference in the difference between time points, and that question is answered with the test of the interaction term. We know that there is no treatment effect in this case because the interaction term is not significant.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Responses</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Responses</h3>
             
             {/* Tab Interface */}
             <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', borderBottom: '2px solid #ccc' }}>
+              <div style={{ display: 'flex', borderBottom: '2px solid #d1d5db' }}>
                 <button
                   onClick={() => setActiveTab('table')}
+                  className=""
                   style={{
                     padding: '12px 24px',
                     border: 'none',
-                    backgroundColor: activeTab === 'table' ? '#4a5568' : '#e2e8f0',
-                    color: activeTab === 'table' ? 'white' : '#4a5568',
                     cursor: 'pointer',
-                    borderRadius: '8px 8px 0 0',
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
                     fontWeight: 'bold',
-                    marginRight: '4px'
+                    marginRight: '4px',
+                    fontSize: '1rem',
+                    backgroundColor: activeTab === 'table' ? '#4a5568' : '#e2e8f0',
+                    color: activeTab === 'table' ? 'white' : '#4a5568'
                   }}
                 >
                   Statistical Table
                 </button>
                 <button
                   onClick={() => setActiveTab('graph')}
+                  className=""
                   style={{
                     padding: '12px 24px',
                     border: 'none',
-                    backgroundColor: activeTab === 'graph' ? '#4a5568' : '#e2e8f0',
-                    color: activeTab === 'graph' ? 'white' : '#4a5568',
                     cursor: 'pointer',
-                    borderRadius: '8px 8px 0 0',
-                    fontWeight: 'bold'
+                    borderTopLeftRadius: '8px',
+                    borderTopRightRadius: '8px',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                    backgroundColor: activeTab === 'graph' ? '#4a5568' : '#e2e8f0',
+                    color: activeTab === 'graph' ? 'white' : '#4a5568'
                   }}
                 >
                   Graph with Error Bars
@@ -632,13 +751,7 @@ export default function Home() {
             </div>
             
             {/* Tab Content */}
-            <div style={{ 
-              backgroundColor: 'white', 
-              border: '1px solid #ccc', 
-              borderRadius: '0 8px 8px 8px', 
-              padding: '20px',
-              minHeight: '300px'
-            }}>
+            <div style={{ backgroundColor: 'white', border: '1px solid #d1d5db', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', borderTopRightRadius: '8px', padding: '20px', minHeight: '300px' }}>
               {activeTab === 'table' && (
                 <div>
                   {loading ? (

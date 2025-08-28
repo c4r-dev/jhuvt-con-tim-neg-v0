@@ -238,7 +238,7 @@ className="button"
                     const conditionDisplay = condition === 'treatment_A' ? 'Treatment' : 'Control';
                     
                     // Get p-value for post-training comparison
-                    let pValue: number | string = condition === 'control' ? 0.34230 : 0.00001;
+                    let pValue: number | string = condition === 'control' ? 0.14142 : 0.00217;
                     
                     // Determine significance
                     const isSignificant = typeof pValue === 'number' && pValue < 0.05;
@@ -254,7 +254,7 @@ className="button"
                           {timeStats.post ? `${timeStats.post.mean.toFixed(1)} (${timeStats.post.standardError.toFixed(1)})` : 'N/A'}
                         </td>
                         <td style={{ border: '1px solid black', padding: '12px', textAlign: 'center' }}>
-                          <span style={{ color: pValue < 0.05 ? '#dc2626' : '#374151', fontWeight: pValue < 0.05 ? '600' : 'normal' }}>
+                          <span style={{ color: '#374151', fontWeight: 'normal' }}>
                             {typeof pValue === 'number' ? pValue.toFixed(5) : pValue}
                           </span>
                         </td>
@@ -272,7 +272,7 @@ className="button"
           </div>
           
           <div style={{ marginTop: '32px' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>More information has been added. Does this change how you interpret the results of the study?</h3>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>Review the statistical table. How do you interpret the results of the study?</h3>
             <textarea
               value={userThoughts}
               onChange={(e) => setUserThoughts(e.target.value)}
@@ -594,12 +594,12 @@ className="button"
               {/* DINS Error Description */}
               <div>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Difference in Nominal Significance (DINS) Error</h3>
-                <div style={{ color: 'black', lineHeight: '1.6' }}>
+                <div style={{ color: 'black', lineHeight: '1.6', width: '100%' }}>
                   <p style={{ marginBottom: '12px' }}>
-                    The <strong>Difference in Nominal Significance (DINS)</strong> error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
+                    The Difference in Nominal Significance (DINS) error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
                   </p>
                   <p>
-                    This error is problematic because the absence of statistical significance in one group does not constitute a test of whether the changes within that group . One way to properly compare treatments in this case would be a repeated measures ANOVA:
+                    This error is problematic because the absence of statistical significance in one group does not constitute a test of whether the changes within that group are significant. One way to properly compare treatments in this case would be a repeated measures ANOVA:
                   </p>
                 </div>
               </div>
@@ -638,15 +638,6 @@ className="button"
                       </tr>
                     </thead>
                     <tbody>
-                      <tr style={{ backgroundColor: '#ffffff' }}>
-                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>(Intercept)</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>354054</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>13331.0</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>371.8220</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', color: '#d73527' }}>1.763e-11 ***</td>
-                      </tr>
                       <tr style={{ backgroundColor: '#f8f9fa' }}>
                         <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition</td>
                         <td style={{ textAlign: 'right', padding: '8px 16px' }}>169</td>
@@ -663,7 +654,7 @@ className="button"
                         <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
                         <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
                         <td style={{ textAlign: 'right', padding: '8px 16px' }}>9.5351</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', color: '#d73527' }}>0.008023 **</td>
+                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.008023 **</td>
                       </tr>
                       <tr style={{ backgroundColor: '#f8f9fa' }}>
                         <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition:time</td>
@@ -698,9 +689,9 @@ className="button"
                 </div>
                 
                 <div style={{ marginTop: '16px' }}>
-                  <div style={{ fontSize: '1rem', color: 'black', lineHeight: '1.6' }}>
+                  <div style={{ fontSize: '1rem', color: 'black', lineHeight: '1.6', width: '100%' }}>
                     <p>
-                      While there is a significant effect of &quot;time&quot;, this is an effect that is true across both groups and is therefore not an answer to our question. We want to know if there is a difference in the difference between time points, and that question is answered with the test of the interaction term. We know that there is no treatment effect in this case because the interaction term is not significant.
+                      While there is a significant effect of &quot;time&quot;, this is an effect that is true across both groups and is therefore not an answer to our question. We want to know if there is a difference in the difference between time points, and that question is answered with the <strong>test of the interaction term</strong>. We know that there is no treatment effect in this case because the interaction term is not significant.
                     </p>
                   </div>
                 </div>

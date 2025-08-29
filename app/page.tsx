@@ -31,6 +31,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'table' | 'graph'>('table');
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showAnovaTable, setShowAnovaTable] = useState(false);
 
   const newBaseButtonStyle: React.CSSProperties = {
     padding: '10px 15px',
@@ -152,6 +153,7 @@ export default function Home() {
     setActiveTab('table');
     setSubmissions([]);
     setLoading(false);
+    setShowAnovaTable(false);
     
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -161,11 +163,11 @@ export default function Home() {
     <div style={{ padding: '20px', maxWidth: '80%', margin: '20px auto' }}>
       <div style={{ backgroundColor: '#f3f4f6', border: '1px solid black', borderRadius: '8px', padding: '24px', marginBottom: '32px' }}>
         <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Does compound A ameliorate grip strength in a mouse model of Amyotrophic Lateral Sclerosis?</h2>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Does Compound A improve motor coordination in a mouse model of Amyotrophic Lateral Sclerosis?</h2>
           
           <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '12px' }}>Study Description</h3>
           <p style={{ color: '#374151', marginBottom: '24px', lineHeight: '1.6' }}>
-            A research team is assessing the efficacy of Compound A on improving grip strength in an ALS (amyotrophic lateral sclerosis) model mouse. The team randomizes the study population and masks the samples of compound A and placebo D. The team assesses grip strength using a standardized rotarod test with a max time of 180 sec.
+            A research team is assessing the efficacy of Compound A on improving motor coordination in an ALS (amyotrophic lateral sclerosis) model mouse. A Treatment group administered compound A is compared with a targeted negative Control group treated with vehicle D. The team assesses motor coordination using a standardized rotarod test with a max time of 180 sec.
           </p>
           
           {/* <h3>Likely value range for dependent variable with units:</h3>
@@ -596,104 +598,128 @@ className="button"
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '16px' }}>Difference in Nominal Significance (DINS) Error</h3>
                 <div style={{ color: 'black', lineHeight: '1.6', width: '100%' }}>
                   <p style={{ marginBottom: '12px' }}>
-                    The Difference in Nominal Significance (DINS) error occurs when researchers incorrectly conclude that two treatments have different effects based solely on the fact that one treatment shows a statistically significant result (p &lt; 0.05) while the other does not.
+                    A Difference in Nominal Significance (DINS) error occurs when researchers wrongly conclude that two treatments have different effects because one treatment shows a statistically significant result when comparing pre- and post- measurements while the other does not.
+                  </p>
+                  <p style={{ marginBottom: '12px' }}>
+                    This error is problematic because a difference in significance is not a significant difference. Statistical tests within each group do not test whether the changes within that group differ from the other group.
                   </p>
                   <p>
-                    This error is problematic because the absence of statistical significance in one group does not constitute a test of whether the changes within that group are significant. One way to properly compare treatments in this case would be a repeated measures ANOVA:
+                    One way to compare treatments in a case like this would be to use a repeated-measures ANOVA. In addition to separate comparisons of time (pre vs post) and treatment (treatment vs control), this test gives us an interaction term, testing whether the change over time differed between treatment and control groups. The interaction term answers our question, telling us that in this case the effect of treatment on performance was not significantly different between groups (p = 0.960732).
                   </p>
                 </div>
               </div>
 
-              {/* ANOVA Table */}
+              {/* ANOVA Table Toggle */}
               <div>
-                <h4 style={{ fontFamily: 'General Sans, sans-serif', fontSize: '18px', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center', color: '#333' }}>
-                  Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
-                </h4>
+                <button 
+                  className="button"
+                  onClick={() => setShowAnovaTable(!showAnovaTable)}
+                  style={{
+                    ...newBaseButtonStyle,
+                    marginBottom: '16px'
+                  }}
+                >
+                  {showAnovaTable ? 'Click to hide the complete ANOVA table.' : 'Click to review the complete ANOVA table.'}
+                </button>
                 
-                <div style={{ 
-                  fontFamily: 'JetBrains Mono, monospace', 
-                  fontSize: '15px', 
-                  backgroundColor: '#f8f9fa', 
-                  padding: '24px', 
-                  borderRadius: '8px', 
-                  border: '1px solid #e9ecef',
-                  boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
-                  overflow: 'auto'
-                }}>
-                  <table style={{ 
-                    width: '100%', 
-                    borderCollapse: 'separate', 
-                    borderSpacing: '0 8px',
-                    fontFamily: 'JetBrains Mono, monospace'
-                  }}>
-                    <thead>
-                      <tr style={{ borderBottom: '2px solid #dee2e6' }}>
-                        <th style={{ textAlign: 'left', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}></th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Sum Sq</th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>num Df</th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Error SS</th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>den Df</th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>F value</th>
-                        <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}>Pr(&gt;F)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr style={{ backgroundColor: '#f8f9fa' }}>
-                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>169</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>13331.0</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.1770</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.680340</td>
-                      </tr>
-                      <tr style={{ backgroundColor: '#ffffff' }}>
-                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>time</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1795</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>9.5351</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.008023 **</td>
-                      </tr>
-                      <tr style={{ backgroundColor: '#f8f9fa' }}>
-                        <td style={{ padding: '8px 16px', fontWeight: 'bold' }}>condition:time</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.0025</td>
-                        <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.960732</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  
-                  <div style={{ 
-                    borderTop: '1px solid #dee2e6', 
-                    paddingTop: '16px', 
-                    marginTop: '16px',
-                    fontSize: '13px',
-                    color: '#666'
-                  }}>
-                    ---
+                {showAnovaTable && (
+                  <div>
+                    <h4 style={{ fontFamily: 'General Sans, sans-serif', fontSize: '18px', fontWeight: 'bold', marginBottom: '24px', textAlign: 'center', color: '#333' }}>
+                      Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
+                    </h4>
+                    
+                    <div style={{ 
+                      fontFamily: 'JetBrains Mono, monospace', 
+                      fontSize: '15px', 
+                      backgroundColor: '#f8f9fa', 
+                      padding: '24px', 
+                      borderRadius: '8px', 
+                      border: '1px solid #e9ecef',
+                      boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                      overflow: 'auto'
+                    }}>
+                      <table style={{ 
+                        width: '100%', 
+                        borderCollapse: 'separate', 
+                        borderSpacing: '0 8px',
+                        fontFamily: 'JetBrains Mono, monospace'
+                      }}>
+                        <thead>
+                          <tr style={{ borderBottom: '2px solid #dee2e6' }}>
+                            <th style={{ textAlign: 'left', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px' }}></th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="Sum of Squares is the variability in the dependent variable that can be attributed to the independent variable. Higher sum of squares means the independent variable has more influence.">Sum Sq</th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="Numerator degrees of freedom is one less than the number of groups being compared.">num Df</th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="Error Sum of Squares is the unexplained variability in the dependent variable for subjects across time points.">Error SS</th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="Denominator degrees of freedom is the sample size minus the number of groups.">den Df</th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="F ratio is the test statistic for the ANOVA, and is the ratio of sum of squares to the error sum of squares. This value is compared to expected values for the degrees of freedom in the numerator and denominator to determine a p-value.">F value</th>
+                            <th style={{ textAlign: 'right', padding: '8px 16px', fontWeight: 'bold', fontSize: '14px', cursor: 'help' }} title="The 'p-value' is the probability of getting the F statistic in question if the null hypothesis ('no effect') were true.">Pr(&gt;F)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style={{ backgroundColor: '#f8f9fa' }}>
+                            <td style={{ padding: '8px 16px', fontWeight: 'bold', cursor: 'help' }} title="This tests whether the overall means are different between treatment and control groups. They are not.">condition</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>169</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>13331.0</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.1770</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.680340</td>
+                          </tr>
+                          <tr style={{ backgroundColor: '#ffffff' }}>
+                            <td style={{ padding: '8px 16px', fontWeight: 'bold', cursor: 'help' }} title="This tests whether the overall means are different between pre- and post- measurements. They are! However, this test is probably significant because both treatment and control mice improved.">time</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>1795</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>1</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>2634.8</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>14</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>9.5351</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px' }}>0.008023 **</td>
+                          </tr>
+                          <tr style={{ backgroundColor: '#f8f9fa', color: 'red' }}>
+                            <td style={{ padding: '8px 16px', fontWeight: 'bold', color: 'red', cursor: 'help' }} title="This interaction term tests whether the difference between time points is different between groups. This answers our question: the effect of time does not differ between treatment and control.">condition:time</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>0</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>1</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>2634.8</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>14</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>0.0025</td>
+                            <td style={{ textAlign: 'right', padding: '8px 16px', color: 'red' }}>0.960732</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
+                      <div style={{ 
+                        borderTop: '1px solid #dee2e6', 
+                        paddingTop: '16px', 
+                        marginTop: '16px',
+                        fontSize: '13px',
+                        color: '#666'
+                      }}>
+                        ---
+                      </div>
+                      
+                      <div style={{ 
+                        fontSize: '13px', 
+                        marginTop: '12px',
+                        fontStyle: 'italic',
+                        color: '#666'
+                      }}>
+                        Signif. codes: 0 &apos;***&apos; 0.001 &apos;**&apos; 0.01 &apos;*&apos; 0.05 &apos;.&apos; 0.1 &apos; &apos; 1
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div style={{ 
-                    fontSize: '13px', 
-                    marginTop: '12px',
-                    fontStyle: 'italic',
-                    color: '#666'
-                  }}>
-                    Signif. codes: 0 &apos;***&apos; 0.001 &apos;**&apos; 0.01 &apos;*&apos; 0.05 &apos;.&apos; 0.1 &apos; &apos; 1
-                  </div>
-                </div>
-                
-                <div style={{ marginTop: '16px' }}>
-                  <div style={{ fontSize: '1rem', color: 'black', lineHeight: '1.6', width: '100%' }}>
-                    <p>
-                      While there is a significant effect of &quot;time&quot;, this is an effect that is true across both groups and is therefore not an answer to our question. We want to know if there is a difference in the difference between time points, and that question is answered with the <strong>test of the interaction term</strong>. We know that there is no treatment effect in this case because the interaction term is not significant.
-                    </p>
-                  </div>
+                )}
+              </div>
+              
+              <div style={{ marginTop: '16px' }}>
+                <div style={{ fontSize: '1rem', color: 'black', lineHeight: '1.6', width: '100%' }}>
+                  <p style={{ marginBottom: '12px' }}>
+                    If you would like to learn more about these kinds of errors in research, check out these references:
+                  </p>
+                  <p style={{ marginBottom: '12px' }}>
+                    Bland, J. M., & Altman, D. G. (2015). Best (but oft forgotten) practices: Testing for treatment effects in randomized trials by separate analyses of changes from baseline in each group is a misleading approach. The American Journal of Clinical Nutrition, 102(5), 991–994. https://doi.org/10.3945/ajcn.115.119768
+                  </p>
+                  <p>
+                    Nieuwenhuis, S., Forstmann, B. U., & Wagenmakers, E.-J. (2011). Erroneous analyses of interactions in neuroscience: A problem of significance. Nature Neuroscience, 14(9), 1105–1107. https://doi.org/10.1038/nn.2886
+                  </p>
                 </div>
               </div>
             </div>

@@ -19,7 +19,7 @@ const submissionSchema = new mongoose.Schema({
 });
 
 // Create or get the model
-const Submission = mongoose.models.dinstimneg || mongoose.model('dinstimneg', submissionSchema);
+const Submission = mongoose.models.DINSSubmissions || mongoose.model('DINSSubmissions', submissionSchema);
 
 export async function POST(request: NextRequest) {
   try {
